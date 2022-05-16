@@ -55,11 +55,28 @@ function searchForLocations() {
   return getCityData(location);
 }
 
+function processWeatherData(rawData, cityName) {
+  const data = {
+    cityName,
+    daily: rawData.daily.map((day) => ({
+      high: day.temp.max,
+      low: day.temp.min,
+      weather: {
+        title: day.weather[0].main,
+        code: day.weather[0].id,
+      },
+    })),
+  };
+
+  return data;
+}
+
 async function getWeatherByLocation() {
   const locations = await searchForLocations();
   const location = chooseLocation(locations);
-  const data = await getWeatherData(location.lat, location.lon);
-  console.log(data);
+  const rawData = await getWeatherData(location.lat, location.lon);
+  const processedData = processWeatherData(rawData, location.name);
+  console.log(processedData);
 }
 
 getWeatherByLocation();
