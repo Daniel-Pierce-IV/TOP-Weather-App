@@ -14,45 +14,52 @@ function createWeatherURL(lat, lon) {
 // Returns current weather and today + 7 days forecast
 async function getWeatherData(lat, lon) {
   const weatherURL = createWeatherURL(lat, lon);
-  const data = await fetch(weatherURL).then((res) => res.json());
-
-  console.log(data);
+  const response = await fetch(weatherURL);
+  return response.json();
 }
 
 // returns up to 5 cities that match the search input
 async function getCityData(location) {
   const geoURL = createGeoURL(location);
-  return fetch(geoURL).then((res) => res.json());
+  const response = await fetch(geoURL);
+  return response.json();
 }
 
 function chooseLocation(locations) {
-  let city;
+  let location;
 
   if (locations.length === 1) {
     // parentheses needed for array destructring into already-declared variable
-    [city] = locations;
+    [location] = locations;
   } else {
     const citiesText = locations
       .map(
-        (location, i) =>
-          `${i + 1}: ${location.name}, ${
-            location.state ? `${location.state}, ` : ''
-          }${location.country}`
+        (city, i) =>
+          `${i + 1}: ${city.name}, ${city.state ? `${city.state}, ` : ''}${
+            city.country
+          }`
       )
       .join('\n');
 
-    while (!city) {
+    while (!location) {
       const userInput = prompt(`${citiesText}\nSelect a city by number (1-5):`);
-      city = locations[parseInt(userInput, 10) - 1];
+      location = locations[parseInt(userInput, 10) - 1];
     }
   }
 
-  getWeatherData(city.lat, city.lon);
+  return location;
 }
 
-function searchForLocation() {
+function searchForLocations() {
   const location = prompt('Search for a city: "city,state,country"');
-  getCityData(location).then(chooseLocation);
+  return getCityData(location);
 }
 
-searchForLocation();
+async function getWeatherByLocation() {
+  const locations = await searchForLocations();
+  const location = chooseLocation(locations);
+  const data = await getWeatherData(location.lat, location.lon);
+  console.log(data);
+}
+
+getWeatherByLocation();
