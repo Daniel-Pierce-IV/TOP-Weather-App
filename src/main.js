@@ -1,11 +1,11 @@
 // I'm aware this is bad practice (this is a practice project)
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
 const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
-const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={location}&limit=5&appid=${apiKey}`;
+const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={query}&limit=5&appid=${apiKey}`;
 const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
 
-function createGeoURL(location) {
-  return apiGeocoding.replace('{location}', location);
+function createGeoURL(query) {
+  return apiGeocoding.replace('{query}', query);
 }
 
 function createReverseURL(lat, lon) {
@@ -23,7 +23,7 @@ async function getWeatherData(lat, lon) {
   return response.json();
 }
 
-async function getCityName(lat, lon) {
+async function getCity(lat, lon) {
   const reverseURL = createReverseURL(lat, lon);
   const response = await fetch(reverseURL);
   return response.json().then((data) => ({
@@ -34,20 +34,20 @@ async function getCityName(lat, lon) {
 }
 
 // returns up to 5 cities that match the search input
-async function getCityData(location) {
-  const geoURL = createGeoURL(location);
+async function getCities(query) {
+  const geoURL = createGeoURL(query);
   const response = await fetch(geoURL);
   return response.json();
 }
 
-function chooseLocation(locations) {
-  let location;
+function chooseCity(cities) {
+  let chosenCity;
 
-  if (locations.length === 1) {
+  if (cities.length === 1) {
     // parentheses needed for array destructring into already-declared variable
-    [location] = locations;
+    [chosenCity] = cities;
   } else {
-    const citiesText = locations
+    const citiesText = cities
       .map(
         (city, i) =>
           `${i + 1}: ${city.name}, ${city.state ? `${city.state}, ` : ''}${
@@ -56,18 +56,18 @@ function chooseLocation(locations) {
       )
       .join('\n');
 
-    while (!location) {
+    while (!chosenCity) {
       const userInput = prompt(`${citiesText}\nSelect a city by number (1-5):`);
-      location = locations[parseInt(userInput, 10) - 1];
+      chosenCity = cities[parseInt(userInput, 10) - 1];
     }
   }
 
-  return location;
+  return chosenCity;
 }
 
-function searchForLocations() {
-  const location = prompt('Search for a city: "city,state,country"');
-  return getCityData(location);
+function searchForCities() {
+  const input = prompt('Search for a city: "city,state,country"');
+  return getCities(input);
 }
 
 function processWeatherData(rawData, cityName) {
@@ -114,20 +114,20 @@ async function getWeather() {
 
 async function getLocationViaBrowser() {
   const { latitude, longitude } = await getBrowserCoords();
-  const cityData = await getCityName(latitude, longitude);
+  const city = await getCity(latitude, longitude);
 
   return locationFactory(
     latitude,
     longitude,
-    cityData.name,
-    cityData.country,
-    cityData.state
+    city.name,
+    city.country,
+    city.state
   );
 }
 
 async function getLocationViaSearch() {
-  const locations = await searchForLocations();
-  return chooseLocation(locations);
+  const cities = await searchForCities();
+  return chooseCity(cities);
 }
 
 function locationFactory(lat, lon, name, country, state = undefined) {
