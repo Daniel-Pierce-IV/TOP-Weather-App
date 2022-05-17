@@ -101,7 +101,7 @@ async function getWeather() {
   try {
     location = await getLocationViaBrowser();
   } catch (error) {
-    console.error('Error with Browser Geolocation', error);
+    console.error("Can't use Browser Geolocation", error);
 
     location = await getLocationViaSearch();
   }
