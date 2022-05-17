@@ -2,9 +2,14 @@
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
 const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
 const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={location}&limit=5&appid=${apiKey}`;
+const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
 
 function createGeoURL(location) {
   return apiGeocoding.replace('{location}', location);
+}
+
+function createReverseURL(lat, lon) {
+  return apiReverseGeo.replace('{lat}', lat).replace('{lon}', lon);
 }
 
 function createWeatherURL(lat, lon) {
@@ -16,6 +21,16 @@ async function getWeatherData(lat, lon) {
   const weatherURL = createWeatherURL(lat, lon);
   const response = await fetch(weatherURL);
   return response.json();
+}
+
+async function getCityName(lat, lon) {
+  const reverseURL = createReverseURL(lat, lon);
+  const response = await fetch(reverseURL);
+  return response.json().then((data) => ({
+    name: data.city,
+    state: data.statename,
+    country: data.country,
+  }));
 }
 
 // returns up to 5 cities that match the search input
@@ -71,12 +86,52 @@ function processWeatherData(rawData, cityName) {
   return data;
 }
 
-async function getWeatherByLocation() {
-  const locations = await searchForLocations();
-  const location = chooseLocation(locations);
+function getBrowserCoords() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (data) => resolve(data.coords),
+      (error) => reject(error)
+    );
+  });
+}
+
+async function getWeather() {
+  let location;
+
+  try {
+    location = await getLocationViaBrowser();
+  } catch (error) {
+    console.error('Error with Browser Geolocation', error);
+
+    location = await getLocationViaSearch();
+  }
+
   const rawData = await getWeatherData(location.lat, location.lon);
   const processedData = processWeatherData(rawData, location.name);
+
   console.log(processedData);
 }
 
-getWeatherByLocation();
+async function getLocationViaBrowser() {
+  const { latitude, longitude } = await getBrowserCoords();
+  const cityData = await getCityName(latitude, longitude);
+
+  return locationFactory(
+    latitude,
+    longitude,
+    cityData.name,
+    cityData.country,
+    cityData.state
+  );
+}
+
+async function getLocationViaSearch() {
+  const locations = await searchForLocations();
+  return chooseLocation(locations);
+}
+
+function locationFactory(lat, lon, name, country, state = undefined) {
+  return { name, state, country, lat, lon };
+}
+
+getWeather();
