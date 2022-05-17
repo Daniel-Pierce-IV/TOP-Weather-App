@@ -16,11 +16,8 @@ function createWeatherURL(lat, lon) {
   return apiWeather.replace('{lat}', lat).replace('{lon}', lon);
 }
 
-// Returns current weather and today + 7 days forecast
-async function getWeatherData(lat, lon) {
-  const weatherURL = createWeatherURL(lat, lon);
-  const response = await fetch(weatherURL);
-  return response.json();
+function locationFactory(lat, lon, name, country, state = undefined) {
+  return { name, state, country, lat, lon };
 }
 
 async function getCity(lat, lon) {
@@ -38,6 +35,11 @@ async function getCities(query) {
   const geoURL = createGeoURL(query);
   const response = await fetch(geoURL);
   return response.json();
+}
+
+function searchForCities() {
+  const input = prompt('Search for a city: "city,state,country"');
+  return getCities(input);
 }
 
 function chooseCity(cities) {
@@ -65,9 +67,38 @@ function chooseCity(cities) {
   return chosenCity;
 }
 
-function searchForCities() {
-  const input = prompt('Search for a city: "city,state,country"');
-  return getCities(input);
+async function getLocationViaSearch() {
+  const cities = await searchForCities();
+  return chooseCity(cities);
+}
+
+function getBrowserCoords() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (data) => resolve(data.coords),
+      (error) => reject(error)
+    );
+  });
+}
+
+async function getLocationViaBrowser() {
+  const { latitude, longitude } = await getBrowserCoords();
+  const city = await getCity(latitude, longitude);
+
+  return locationFactory(
+    latitude,
+    longitude,
+    city.name,
+    city.country,
+    city.state
+  );
+}
+
+// Returns current weather and today + 7 days forecast
+async function getWeatherData(lat, lon) {
+  const weatherURL = createWeatherURL(lat, lon);
+  const response = await fetch(weatherURL);
+  return response.json();
 }
 
 function processWeatherData(rawData, cityName) {
@@ -86,15 +117,6 @@ function processWeatherData(rawData, cityName) {
   return data;
 }
 
-function getBrowserCoords() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (data) => resolve(data.coords),
-      (error) => reject(error)
-    );
-  });
-}
-
 async function getWeather() {
   let location;
 
@@ -110,28 +132,6 @@ async function getWeather() {
   const processedData = processWeatherData(rawData, location.name);
 
   console.log(processedData);
-}
-
-async function getLocationViaBrowser() {
-  const { latitude, longitude } = await getBrowserCoords();
-  const city = await getCity(latitude, longitude);
-
-  return locationFactory(
-    latitude,
-    longitude,
-    city.name,
-    city.country,
-    city.state
-  );
-}
-
-async function getLocationViaSearch() {
-  const cities = await searchForCities();
-  return chooseCity(cities);
-}
-
-function locationFactory(lat, lon, name, country, state = undefined) {
-  return { name, state, country, lat, lon };
 }
 
 getWeather();
