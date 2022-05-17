@@ -117,7 +117,7 @@ function processWeatherData(rawData, cityName) {
   return data;
 }
 
-async function getWeather() {
+async function getLocation() {
   let location;
 
   try {
@@ -128,6 +128,11 @@ async function getWeather() {
     location = await getLocationViaSearch();
   }
 
+  return location;
+}
+
+async function getWeather() {
+  const location = await getLocation();
   const rawData = await getWeatherData(location.lat, location.lon);
   const processedData = processWeatherData(rawData, location.name);
 
