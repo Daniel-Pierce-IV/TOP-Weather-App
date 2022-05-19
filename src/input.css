@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+
+#current-weather .temp, 
+#current-weather .weather {
+  -webkit-text-stroke: 3px black;
+  font-weight: bold;
+}
+
+/* Add the degree symbol for all temps */
+.temp::after {
+  content: "\00B0";
+}
+
+/* Add a comma and a non-breaking space */
+.comma::after {
+  content: ",\00A0";
+}
+
+/* .temp.text-outline, */
+/* .text-outline {
+  text-shadow:
+    -2px -2px 0 #000,  
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+} */
