@@ -13,6 +13,21 @@ body {
   font-weight: bold;
 }
 
+/* Fahrenheit / Celcius buttons */
+
+#unit-controls button {
+  color: rgb(156 163 175);
+}
+
+#unit-controls button:hover,
+#unit-controls button.active {
+  color: white;
+}
+
+#unit-controls button.active {
+  cursor: default;
+}
+
 /* Add the degree symbol for all temps */
 .temp::after {
   content: "\00B0";

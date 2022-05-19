@@ -656,6 +656,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   gap: 0.5rem;
 }
 
+.gap-4 {
+  gap: 1rem;
+}
+
 .justify-self-start {
   justify-self: start;
 }
@@ -670,6 +674,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .border-b-4 {
   border-bottom-width: 4px;
+}
+
+.border-l-2 {
+  border-left-width: 2px;
 }
 
 .border-purple-500 {
@@ -839,6 +847,21 @@ body {
 #current-weather .weather {
   -webkit-text-stroke: 3px black;
   font-weight: bold;
+}
+
+/* Fahrenheit / Celcius buttons */
+
+#unit-controls button {
+  color: rgb(156 163 175);
+}
+
+#unit-controls button:hover,
+#unit-controls button.active {
+  color: white;
+}
+
+#unit-controls button.active {
+  cursor: default;
 }
 
 /* Add the degree symbol for all temps */
