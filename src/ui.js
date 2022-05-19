@@ -2,15 +2,15 @@
   TODO
     Get all dynamic UI elements
       conditions
-      locations
       dates
       current time
-      daily labels
     Toggle Celcius / Fahrenheit via buttons
     Update background image based on current weather condition
     Create reference objects to weather condition svgs */
 
 export default class UI {
+  #dayNameElements;
+
   #tempElements;
 
   #locationElements;
@@ -20,6 +20,7 @@ export default class UI {
   constructor() {
     this.gatherTempElements();
     this.gatherLocationElements();
+    this.gatherDayNameElements();
   }
 
   set weatherData(value) {
@@ -43,6 +44,12 @@ export default class UI {
     };
   }
 
+  gatherDayNameElements() {
+    this.#dayNameElements = Array.from(
+      document.querySelectorAll('#daily .day .name')
+    );
+  }
+
   gatherLocationElements() {
     this.#locationElements = {
       main: document.querySelector('.current .city'),
@@ -57,6 +64,7 @@ export default class UI {
   #refresh() {
     this.#refreshTemps();
     this.#refreshLocation();
+    this.#refreshDayNames();
   }
 
   #refreshTemps() {
@@ -83,6 +91,14 @@ export default class UI {
     this.#locationElements.full.country.textContent = UI.#titleCase(
       this.#weatherData.location.country
     );
+  }
+
+  #refreshDayNames() {
+    this.#dayNameElements.forEach((day, i) => {
+      day.textContent = new Intl.DateTimeFormat('en-US', {
+        weekday: 'narrow',
+      }).format(this.#weatherData.daily[i + 1].date);
+    });
   }
 
   static #titleCase(str) {
