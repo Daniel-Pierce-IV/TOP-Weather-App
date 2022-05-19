@@ -102,11 +102,21 @@ async function getWeatherData(lat, lon) {
 }
 
 function processWeatherData(rawData, cityName) {
+  const KELVIN_SUB = 273.15;
+
   const data = {
     cityName,
     daily: rawData.daily.map((day) => ({
-      high: day.temp.max,
-      low: day.temp.min,
+      // dt must be converted to milliseconds
+      date: new Date(day.dt * 1000),
+      f: {
+        high: Math.round(((day.temp.max - KELVIN_SUB) * 9) / 5 + 32),
+        low: Math.round(((day.temp.min - KELVIN_SUB) * 9) / 5 + 32),
+      },
+      c: {
+        high: Math.round(day.temp.max - KELVIN_SUB),
+        low: Math.round(day.temp.min - KELVIN_SUB),
+      },
       weather: {
         title: day.weather[0].main,
         code: day.weather[0].id,
