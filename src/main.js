@@ -115,9 +115,9 @@ async function getWeatherData(lat, lon) {
   return response.json();
 }
 
-function processWeatherData(rawData, cityName) {
+function processWeatherData(rawData, location) {
   const data = {
-    cityName,
+    location,
     current: {
       f: kelvinToFahrenheit(rawData.current.temp),
       c: kelvinToCelcius(rawData.current.temp),
@@ -161,7 +161,7 @@ async function getWeather() {
   const location = await getLocation();
   const rawData = await getWeatherData(location.lat, location.lon);
 
-  return processWeatherData(rawData, location.name);
+  return processWeatherData(rawData, location);
 }
 
 getWeather().then((data) => {
