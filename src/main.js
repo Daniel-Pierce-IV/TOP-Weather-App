@@ -1,8 +1,12 @@
+import UI from './ui.js';
+
 // I'm aware this is bad practice (this is a practice project)
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
 const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
 const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={query}&limit=5&appid=${apiKey}`;
 const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
+
+const ui = new UI();
 
 function createGeoURL(query) {
   return apiGeocoding.replace('{query}', query);
@@ -18,6 +22,14 @@ function createWeatherURL(lat, lon) {
 
 function locationFactory(lat, lon, name, country, state = undefined) {
   return { name, state, country, lat, lon };
+}
+
+function kelvinToCelcius(kelvin) {
+  return Math.round(kelvin - 273.15);
+}
+
+function kelvinToFahrenheit(kelvin) {
+  return Math.round(((kelvin - 273.15) * 9) / 5 + 32);
 }
 
 async function getCity(lat, lon) {
@@ -106,16 +118,20 @@ function processWeatherData(rawData, cityName) {
 
   const data = {
     cityName,
+    current: {
+      f: kelvinToFahrenheit(rawData.current.temp),
+      c: kelvinToCelcius(rawData.current.temp),
+    },
     daily: rawData.daily.map((day) => ({
       // dt must be converted to milliseconds
       date: new Date(day.dt * 1000),
       f: {
-        high: Math.round(((day.temp.max - KELVIN_SUB) * 9) / 5 + 32),
-        low: Math.round(((day.temp.min - KELVIN_SUB) * 9) / 5 + 32),
+        high: kelvinToFahrenheit(day.temp.max),
+        low: kelvinToFahrenheit(day.temp.min),
       },
       c: {
-        high: Math.round(day.temp.max - KELVIN_SUB),
-        low: Math.round(day.temp.min - KELVIN_SUB),
+        high: kelvinToCelcius(day.temp.max),
+        low: kelvinToCelcius(day.temp.min),
       },
       weather: {
         title: day.weather[0].main,
@@ -144,9 +160,10 @@ async function getLocation() {
 async function getWeather() {
   const location = await getLocation();
   const rawData = await getWeatherData(location.lat, location.lon);
-  const processedData = processWeatherData(rawData, location.name);
 
-  console.log(processedData);
+  return processWeatherData(rawData, location.name);
 }
 
-getWeather();
+getWeather().then((data) => {
+  ui.weatherData = data;
+});
