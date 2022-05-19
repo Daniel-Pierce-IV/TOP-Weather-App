@@ -1,5 +1,7 @@
 import UI from './ui.js';
 
+const KELVIN_CONSTANT = 273.15;
+
 // I'm aware this is bad practice (this is a practice project)
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
 const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
@@ -25,11 +27,11 @@ function locationFactory(lat, lon, name, country, state = undefined) {
 }
 
 function kelvinToCelcius(kelvin) {
-  return Math.round(kelvin - 273.15);
+  return Math.round(kelvin - KELVIN_CONSTANT);
 }
 
 function kelvinToFahrenheit(kelvin) {
-  return Math.round(((kelvin - 273.15) * 9) / 5 + 32);
+  return Math.round(((kelvin - KELVIN_CONSTANT) * 9) / 5 + 32);
 }
 
 async function getCity(lat, lon) {
@@ -114,8 +116,6 @@ async function getWeatherData(lat, lon) {
 }
 
 function processWeatherData(rawData, cityName) {
-  const KELVIN_SUB = 273.15;
-
   const data = {
     cityName,
     current: {
