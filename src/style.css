@@ -488,6 +488,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   bottom: 0px;
 }
 
+.top-full {
+  top: 100%;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .flex {
   display: flex;
 }
@@ -502,6 +514,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-10 {
   height: 2.5rem;
+}
+
+.h-12 {
+  height: 3rem;
 }
 
 .w-\[max\(35\%\2c 350px\)\] {
@@ -522,6 +538,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-\[max\(75\%\2c 30px\)\] {
   width: max(75%,30px);
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .grow {
@@ -576,6 +596,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-left-width: 2px;
 }
 
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
 .bg-\[url\(\.\/night-clear-landscape\.jpg\)\] {
   background-image: url(./night-clear-landscape.jpg);
 }
@@ -596,12 +624,26 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 2rem;
 }
 
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
 
 .pb-3 {
   padding-bottom: 0.75rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
 }
 
 .text-9xl {

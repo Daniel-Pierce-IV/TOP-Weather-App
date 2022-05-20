@@ -30,6 +30,24 @@
 
     <div class="h-full flex flex-col gap-8 p-8 relative">
       <section id="location">
+        <div class="search-group relative mb-6">
+          <label for="search" class="flex border-b-2">
+            <svg class="w-12 h-12" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+            </svg>
+  
+            <input class="pl-2 w-full bg-transparent text-xl" 
+                  type="text"
+                  name="search"
+                  id="search"
+                  placeholder="Search 'City, State/Country'">
+          </label>
+
+          <div class="dropdown frosted-glass top-full right-0 left-0 px-4 absolute">
+            <ul id="cities" class="text-xl py-2"></ul>
+          </div>
+        </div>
+
         <div id="address" class="flex flex-wrap">
           <div id="city" class="comma text-3xl"></div>
           <div id="state" class="comma text-3xl"></div>
