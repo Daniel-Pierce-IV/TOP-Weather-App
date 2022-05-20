@@ -586,8 +586,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 2.5rem;
 }
 
-.w-3\/4 {
-  width: 75%;
+.w-\[max\(75\%\2c 24px\)\] {
+  width: max(75%,24px);
+}
+
+.w-\[max\(75\%\2c 30px\)\] {
+  width: max(75%,30px);
+}
+
+.w-0 {
+  width: 0px;
+}
+
+.w-\[45px\] {
+  width: 45px;
+}
+
+.shrink-0 {
+  flex-shrink: 0;
 }
 
 .grow {
@@ -819,6 +835,34 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.text-\[min\(3rem\2c 100\%\)\] {
+  font-size: min(3rem,100%);
+}
+
+.text-\[min\(3rem\2c 3vw\)\] {
+  font-size: min(3rem,3vw);
+}
+
+.text-\[min\(3rem\2c 2vw\)\] {
+  font-size: min(3rem,2vw);
+}
+
+.text-\[clamp\(1rem\2c 1vw\2c 3rem\)\] {
+  font-size: clamp(1rem,1vw,3rem);
+}
+
+.text-\[clamp\(1rem\2c 2vw\2c 3rem\)\] {
+  font-size: clamp(1rem,2vw,3rem);
+}
+
+.text-\[clamp\(1rem\2c 3vw\2c 3rem\)\] {
+  font-size: clamp(1rem,3vw,3rem);
+}
+
+.text-\[clamp\(2rem\2c 3vw\2c 3rem\)\] {
+  font-size: clamp(2rem,3vw,3rem);
 }
 
 .text-white {

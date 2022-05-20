@@ -153,7 +153,7 @@ export default class UI {
   #refreshConditions() {
     const currentClasses = 'paper-shadow-svg w-32 h-32';
     const todayClasses = 'w-10 h-10';
-    const dailyClasses = 'w-3/4';
+    const dailyClasses = 'w-[max(75%,30px)]';
 
     this.#conditionElements.current.innerHTML = conditions.fromCode(
       this.#weatherData.current.code,
