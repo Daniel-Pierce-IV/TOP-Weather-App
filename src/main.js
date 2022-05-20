@@ -119,8 +119,10 @@ function processWeatherData(rawData, location) {
   const data = {
     location,
     current: {
+      date: new Date(rawData.current.dt * 1000),
       f: kelvinToFahrenheit(rawData.current.temp),
       c: kelvinToCelcius(rawData.current.temp),
+      code: rawData.current.weather[0].id,
     },
     daily: rawData.daily.map((day) => ({
       // dt must be converted to milliseconds

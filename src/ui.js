@@ -1,9 +1,8 @@
 /* 
   TODO
-    Get all dynamic UI elements
-      conditions
-    Update background image based on current weather condition
-    Create reference objects to weather condition svgs */
+    Update background image based on current weather condition */
+
+import conditions from './conditions.js';
 
 export default class UI {
   #isCelsius = false;
@@ -22,11 +21,14 @@ export default class UI {
 
   #locationElements;
 
+  #conditionElements;
+
   #weatherData;
 
   constructor() {
     this.gatherTempElements();
     this.gatherLocationElements();
+    this.gatherConditionElements();
     this.gatherDayNameElements();
     this.gatherDateElements();
     this.gatherTimeElement();
@@ -79,6 +81,14 @@ export default class UI {
     };
   }
 
+  gatherConditionElements() {
+    this.#conditionElements = {
+      current: document.querySelector('.current .condition'),
+      today: document.querySelector('#hourly .condition'),
+      daily: Array.from(document.querySelectorAll('#daily .day .condition')),
+    };
+  }
+
   setupUnitButtons() {
     this.#unitButtons = {
       f: document.querySelector('#fahrenheit'),
@@ -99,6 +109,7 @@ export default class UI {
   #refresh() {
     this.#refreshTemps();
     this.#refreshLocation();
+    this.#refreshConditions();
     this.#refreshDayNames();
     this.#refreshDates();
     this.#refreshTime();
@@ -129,6 +140,29 @@ export default class UI {
     this.#locationElements.full.country.textContent = UI.#titleCase(
       this.#weatherData.location.country
     );
+  }
+
+  #refreshConditions() {
+    const currentClasses = 'paper-shadow-svg w-32 h-32';
+    const todayClasses = 'w-10 h-10';
+    const dailyClasses = 'w-3/4';
+
+    this.#conditionElements.current.innerHTML = conditions.fromCode(
+      this.#weatherData.current.code,
+      currentClasses
+    );
+
+    this.#conditionElements.today.innerHTML = conditions.fromCode(
+      this.#weatherData.daily[0].weather.code,
+      todayClasses
+    );
+
+    this.#conditionElements.daily.forEach((condition, i) => {
+      condition.innerHTML = conditions.fromCode(
+        this.#weatherData.daily[i + 1].weather.code,
+        dailyClasses
+      );
+    });
   }
 
   #refreshDayNames() {
