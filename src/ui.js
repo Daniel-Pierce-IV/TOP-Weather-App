@@ -2,11 +2,16 @@
   TODO
     Get all dynamic UI elements
       conditions
-    Toggle Celcius / Fahrenheit via buttons
     Update background image based on current weather condition
     Create reference objects to weather condition svgs */
 
 export default class UI {
+  #isCelsius = false;
+
+  #unit = 'f';
+
+  #unitButtons;
+
   #dayNameElements;
 
   #dateElements;
@@ -25,6 +30,7 @@ export default class UI {
     this.gatherDayNameElements();
     this.gatherDateElements();
     this.gatherTimeElement();
+    this.setupUnitButtons();
   }
 
   set weatherData(value) {
@@ -73,6 +79,23 @@ export default class UI {
     };
   }
 
+  setupUnitButtons() {
+    this.#unitButtons = {
+      f: document.querySelector('#fahrenheit'),
+      c: document.querySelector('#celsius'),
+    };
+
+    this.#unitButtons.f.addEventListener(
+      'click',
+      this.#toggleTempsUnit.bind(this, this.#unitButtons.f)
+    );
+
+    this.#unitButtons.c.addEventListener(
+      'click',
+      this.#toggleTempsUnit.bind(this, this.#unitButtons.c)
+    );
+  }
+
   #refresh() {
     this.#refreshTemps();
     this.#refreshLocation();
@@ -82,11 +105,12 @@ export default class UI {
   }
 
   #refreshTemps() {
-    this.#tempElements.current.textContent = this.#weatherData.current.f;
+    this.#tempElements.current.textContent =
+      this.#weatherData.current[this.#unit];
 
     this.#tempElements.daily.forEach((day, i) => {
-      day.high.textContent = this.#weatherData.daily[i].f.high;
-      day.low.textContent = this.#weatherData.daily[i].f.low;
+      day.high.textContent = this.#weatherData.daily[i][this.#unit].high;
+      day.low.textContent = this.#weatherData.daily[i][this.#unit].low;
     });
   }
 
@@ -140,6 +164,24 @@ export default class UI {
       'en-US',
       options
     ).format(this.#weatherData.current.date);
+  }
+
+  #toggleTempsUnit(clickedButton) {
+    if (clickedButton !== this.#unitButtons[this.#unit]) {
+      this.#isCelsius = !this.#isCelsius;
+
+      if (this.#isCelsius) {
+        this.#unit = 'c';
+        this.#unitButtons.f.classList.remove('active');
+        this.#unitButtons.c.classList.add('active');
+      } else {
+        this.#unit = 'f';
+        this.#unitButtons.f.classList.add('active');
+        this.#unitButtons.c.classList.remove('active');
+      }
+
+      this.#refreshTemps();
+    }
   }
 
   static #titleCase(str) {
