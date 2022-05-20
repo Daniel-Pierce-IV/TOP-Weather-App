@@ -10,7 +10,7 @@
   <script src="./main.js" type="module" defer></script>
   <title>Weather App</title>
 </head>
-<body class="bg-[url(./night-clear-landscape.jpg)] bg-cover bg-center relative flex justify-end">
+<body class="loading bg-[url(./night-clear-landscape.jpg)] bg-cover bg-center relative flex justify-end">
   <div class="current p-10 absolute left-0 bottom-0 flex flex-col text-white">
     <div class="weather flex">
       <div class="condition"></div>
@@ -39,7 +39,7 @@
       </section>
 
       <section id="hourly" class="grow flex flex-col">
-        <span class="text-6xl"></span>
+        <span class="text-6xl hideable">Today</span>
         <div class="weather flex items-center gap-2">
           <div class="condition"></div>
           <div class="high temp text-xl"></div>
@@ -99,7 +99,7 @@
         </div>
       </section>
 
-      <div id="unit-controls" class="flex justify-center gap-4">
+      <div id="unit-controls" class="hideable flex justify-center gap-4">
         <span class="grow basis-0 flex justify-end">
           <button id="fahrenheit" type="button" class="active text-xl">Fahrenheit</button>
         </span>

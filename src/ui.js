@@ -26,6 +26,7 @@ export default class UI {
   #weatherData;
 
   constructor() {
+    document.body.classList.add('loading');
     this.gatherTempElements();
     this.gatherLocationElements();
     this.gatherConditionElements();
@@ -38,6 +39,7 @@ export default class UI {
   set weatherData(value) {
     this.#weatherData = value;
     this.#refresh();
+    document.body.classList.remove('loading');
   }
 
   gatherTempElements() {

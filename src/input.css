@@ -7,6 +7,12 @@ body {
   height: 100%;
 }
 
+body.loading .comma::after,
+body.loading .temp::after,
+body.loading .hideable {
+  opacity: 0%;
+}
+
 #current-weather .temp, 
 #current-weather .weather {
   -webkit-text-stroke: 3px black;
