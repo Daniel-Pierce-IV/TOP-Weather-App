@@ -142,6 +142,9 @@ function processWeatherData(rawData, location) {
     })),
   };
 
+  data.today = data.daily[0];
+  data.daily = data.daily.slice(1);
+
   return data;
 }
 

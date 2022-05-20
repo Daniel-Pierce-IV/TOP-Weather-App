@@ -43,16 +43,16 @@ export default class UI {
   gatherTempElements() {
     this.#tempElements = {
       current: document.querySelector('.current .temp'),
-      daily: [
-        {
-          high: document.querySelector('#hourly .weather .high'),
-          low: document.querySelector('#hourly .weather .low'),
-        },
-        ...Array.from(document.querySelectorAll('#daily .day')).map((day) => ({
+      today: {
+        high: document.querySelector('#hourly .weather .high'),
+        low: document.querySelector('#hourly .weather .low'),
+      },
+      daily: Array.from(document.querySelectorAll('#daily .day')).map(
+        (day) => ({
           high: day.querySelector('.high'),
           low: day.querySelector('.low'),
-        })),
-      ],
+        })
+      ),
     };
   }
 
@@ -119,6 +119,12 @@ export default class UI {
     this.#tempElements.current.textContent =
       this.#weatherData.current[this.#unit];
 
+    this.#tempElements.today.high.textContent =
+      this.#weatherData.today[this.#unit].high;
+
+    this.#tempElements.today.low.textContent =
+      this.#weatherData.today[this.#unit].low;
+
     this.#tempElements.daily.forEach((day, i) => {
       day.high.textContent = this.#weatherData.daily[i][this.#unit].high;
       day.low.textContent = this.#weatherData.daily[i][this.#unit].low;
@@ -153,13 +159,13 @@ export default class UI {
     );
 
     this.#conditionElements.today.innerHTML = conditions.fromCode(
-      this.#weatherData.daily[0].weather.code,
+      this.#weatherData.today.weather.code,
       todayClasses
     );
 
     this.#conditionElements.daily.forEach((condition, i) => {
       condition.innerHTML = conditions.fromCode(
-        this.#weatherData.daily[i + 1].weather.code,
+        this.#weatherData.daily[i].weather.code,
         dailyClasses
       );
     });
@@ -169,7 +175,7 @@ export default class UI {
     this.#dayNameElements.forEach((day, i) => {
       day.textContent = new Intl.DateTimeFormat('en-US', {
         weekday: 'narrow',
-      }).format(this.#weatherData.daily[i + 1].date);
+      }).format(this.#weatherData.daily[i].date);
     });
   }
 
