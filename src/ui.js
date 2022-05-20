@@ -2,7 +2,6 @@
   TODO
     Get all dynamic UI elements
       conditions
-      dates
       current time
     Toggle Celcius / Fahrenheit via buttons
     Update background image based on current weather condition
@@ -10,6 +9,8 @@
 
 export default class UI {
   #dayNameElements;
+
+  #dateElements;
 
   #tempElements;
 
@@ -21,6 +22,7 @@ export default class UI {
     this.gatherTempElements();
     this.gatherLocationElements();
     this.gatherDayNameElements();
+    this.gatherDateElements();
   }
 
   set weatherData(value) {
@@ -50,6 +52,10 @@ export default class UI {
     );
   }
 
+  gatherDateElements() {
+    this.#dateElements = Array.from(document.querySelectorAll('#date, .date'));
+  }
+
   gatherLocationElements() {
     this.#locationElements = {
       main: document.querySelector('.current .city'),
@@ -65,6 +71,7 @@ export default class UI {
     this.#refreshTemps();
     this.#refreshLocation();
     this.#refreshDayNames();
+    this.#refreshDates();
   }
 
   #refreshTemps() {
@@ -98,6 +105,21 @@ export default class UI {
       day.textContent = new Intl.DateTimeFormat('en-US', {
         weekday: 'narrow',
       }).format(this.#weatherData.daily[i + 1].date);
+    });
+  }
+
+  #refreshDates() {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+
+    this.#dateElements.forEach((date) => {
+      date.textContent = new Intl.DateTimeFormat('en-US', options).format(
+        this.#weatherData.current.date
+      );
     });
   }
 
