@@ -1,5 +1,6 @@
 /* 
   TODO
+    Allow user city selection
     Update background image based on current weather condition */
 
 import conditions from './conditions.js';
@@ -23,6 +24,10 @@ export default class UI {
 
   #conditionElements;
 
+  #searchElements;
+
+  #searchEventCallbacks = [];
+
   #weatherData;
 
   constructor() {
@@ -33,13 +38,19 @@ export default class UI {
     this.gatherDayNameElements();
     this.gatherDateElements();
     this.gatherTimeElement();
+    this.gatherSearchElements();
     this.setupUnitButtons();
+    this.setupSearch();
   }
 
   set weatherData(value) {
     this.#weatherData = value;
     this.#refresh();
     document.body.classList.remove('loading');
+  }
+
+  subscribeToSearchEvent(callback) {
+    this.#searchEventCallbacks.push(callback);
   }
 
   gatherTempElements() {
@@ -91,6 +102,15 @@ export default class UI {
     };
   }
 
+  gatherSearchElements() {
+    this.#searchElements = {
+      input: document.querySelector('#search'),
+      form: document.querySelector('.search-group form'),
+      dropdown: document.querySelector('.search-group .dropdown'),
+      list: document.querySelector('#cities'),
+    };
+  }
+
   setupUnitButtons() {
     this.#unitButtons = {
       f: document.querySelector('#fahrenheit'),
@@ -106,6 +126,17 @@ export default class UI {
       'click',
       this.#toggleTempsUnit.bind(this, this.#unitButtons.c)
     );
+  }
+
+  setupSearch() {
+    this.#searchElements.form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      this.#notifySearchEvent(this.#searchElements.input.value);
+    });
+  }
+
+  #notifySearchEvent(data) {
+    this.#searchEventCallbacks.forEach((callback) => callback(data));
   }
 
   #refresh() {
