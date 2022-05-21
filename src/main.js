@@ -9,6 +9,7 @@ const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={query}&lim
 // const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
 
 const ui = new UI();
+let cityCache;
 
 function createGeoURL(query) {
   return apiGeocoding.replace('{query}', query);
@@ -48,7 +49,8 @@ function kelvinToFahrenheit(kelvin) {
 async function getCities(query) {
   const geoURL = createGeoURL(query);
   const response = await fetch(geoURL);
-  return response.json();
+  cityCache = await response.json();
+  return cityCache;
 }
 
 async function searchForCities(searchValue) {
@@ -152,14 +154,13 @@ ui.subscribeToSearchEvent(async (inputValue) => {
   if (cities.length === 1) {
     ui.weatherData = await getWeather(cities[0]);
   } else {
-    // TODO cache the cities to be used later when user makes a selection
     const cityStrings = cities.map((city) => cityToString(city));
     ui.updateSearchChoices(cityStrings);
   }
 });
 
 ui.subscribeToSearchChoice(async (cityString) => {
-  const cities = await getCities(cityString);
+  const cities = cityCache.filter((city) => cityToString(city) === cityString);
   const city = condenseCities(cities);
   ui.weatherData = await getWeather(city);
 });
