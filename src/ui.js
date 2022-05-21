@@ -2,7 +2,7 @@
   TODO
     Update background image based on current weather condition */
 
-import conditions from './conditions.js';
+import conditions from './conditions';
 
 export default class UI {
   #isCelsius = false;
