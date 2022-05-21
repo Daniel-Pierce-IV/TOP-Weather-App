@@ -1,6 +1,5 @@
 /* 
   TODO
-    Allow user city selection
     Update background image based on current weather condition */
 
 import conditions from './conditions.js';
