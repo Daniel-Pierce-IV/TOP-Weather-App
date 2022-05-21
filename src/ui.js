@@ -28,6 +28,8 @@ export default class UI {
 
   #searchEventCallbacks = [];
 
+  #searchChoiceCallbacks = [];
+
   #weatherData;
 
   constructor() {
@@ -51,17 +53,36 @@ export default class UI {
 
   updateSearchChoices(choices) {
     choices.forEach((choice) => {
-      const element = document.createElement('li');
-      element.classList = 'py-2';
-      element.textContent = choice;
-      this.#searchElements.list.append(element);
+      this.#searchElements.list.append(this.#createChoiceElement(choice));
     });
 
     this.#searchElements.dropdown.classList.remove('hidden');
   }
 
+  #createChoiceElement(choice) {
+    const element = document.createElement('li');
+    element.classList = 'py-2';
+    element.textContent = choice;
+
+    element.addEventListener('click', () => {
+      this.#notifySearchChoice(choice);
+      this.#resetSearch();
+    });
+
+    return element;
+  }
+
+  #resetSearch() {
+    this.#searchElements.dropdown.classList.add('hidden');
+    this.#searchElements.list.innerHTML = '';
+  }
+
   subscribeToSearchEvent(callback) {
     this.#searchEventCallbacks.push(callback);
+  }
+
+  subscribeToSearchChoice(callback) {
+    this.#searchChoiceCallbacks.push(callback);
   }
 
   gatherTempElements() {
@@ -148,6 +169,10 @@ export default class UI {
 
   #notifySearchEvent(data) {
     this.#searchEventCallbacks.forEach((callback) => callback(data));
+  }
+
+  #notifySearchChoice(data) {
+    this.#searchChoiceCallbacks.forEach((callback) => callback(data));
   }
 
   #refresh() {
