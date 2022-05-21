@@ -49,6 +49,17 @@ export default class UI {
     document.body.classList.remove('loading');
   }
 
+  updateSearchChoices(choices) {
+    choices.forEach((choice) => {
+      const element = document.createElement('li');
+      element.classList = 'py-2';
+      element.textContent = choice;
+      this.#searchElements.list.append(element);
+    });
+
+    this.#searchElements.dropdown.classList.remove('hidden');
+  }
+
   subscribeToSearchEvent(callback) {
     this.#searchEventCallbacks.push(callback);
   }
