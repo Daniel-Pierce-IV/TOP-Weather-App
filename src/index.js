@@ -4,7 +4,7 @@ const KELVIN_CONSTANT = 273.15;
 
 // I'm aware this is bad practice (this is a practice project)
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
-const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
+const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,alerts&appid=${apiKey}`;
 const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={query}&limit=5&appid=${apiKey}`;
 // const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
 
@@ -100,6 +100,12 @@ function processWeatherData(rawData, location) {
       c: kelvinToCelcius(rawData.current.temp),
       code: rawData.current.weather[0].id,
     },
+    hourly: rawData.hourly.map((hour) => ({
+      // dt must be converted to milliseconds
+      date: new Date(hour.dt * 1000),
+      f: kelvinToFahrenheit(hour.temp),
+      c: kelvinToCelcius(hour.temp),
+    })),
     daily: rawData.daily.map((day) => ({
       // dt must be converted to milliseconds
       date: new Date(day.dt * 1000),

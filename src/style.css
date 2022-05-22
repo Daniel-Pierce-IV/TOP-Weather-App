@@ -468,6 +468,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-sepia:  ;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .static {
   position: static;
 }
@@ -500,8 +504,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 1.5rem;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
+}
+
+.grid {
+  display: grid;
 }
 
 .hidden {
@@ -512,6 +524,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 100%;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -520,16 +536,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2.5rem;
 }
 
-.h-12 {
-  height: 3rem;
-}
-
 .w-\[max\(35\%\2c 350px\)\] {
   width: max(35%,350px);
 }
 
 .w-full {
   width: 100%;
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .w-32 {
@@ -544,16 +560,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: max(75%,30px);
 }
 
-.w-12 {
-  width: 3rem;
-}
-
 .grow {
   flex-grow: 1;
 }
 
 .basis-0 {
   flex-basis: 0px;
+}
+
+.resize {
+  resize: both;
 }
 
 .flex-col {
@@ -596,12 +612,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   gap: 1rem;
 }
 
-.border-l-2 {
-  border-left-width: 2px;
+.border {
+  border-width: 1px;
 }
 
 .border-b-2 {
   border-bottom-width: 2px;
+}
+
+.border-l-2 {
+  border-left-width: 2px;
 }
 
 .bg-transparent {
@@ -642,12 +662,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-top: 1rem;
 }
 
-.pb-3 {
-  padding-bottom: 0.75rem;
-}
-
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
 }
 
 .text-9xl {
@@ -670,6 +690,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 2rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -680,18 +705,35 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1;
 }
 
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
 .text-\[clamp\(2rem\2c 3vw\2c 3rem\)\] {
   font-size: clamp(2rem,3vw,3rem);
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.underline {
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.transition {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 html,
@@ -774,4 +816,15 @@ body.loading .hideable {
 
 #sidebar {
   box-shadow: -2px 0px 4px 1px rgba(75,75,75,0.7);
+}
+
+#tooltip {
+  -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+  color: white;
+  font-size: 1.5rem;
+  padding: 0.75rem;
+  box-shadow: 0px 2px 4px 2px rgba(50,50,50,0.6);
+  position: absolute;
+  pointer-events: none;
 }

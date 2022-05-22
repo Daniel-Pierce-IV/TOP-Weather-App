@@ -5,9 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./style.css">
-  <script src="./conditions.js" type="module"></script>
-  <script src="./ui.js" type="module"></script>
-  <script src="./main.js" type="module" defer></script>
+  <script src="./main.js" defer></script>
   <title>Weather App</title>
 </head>
 <body class="loading bg-[url(./night-clear-landscape.jpg)] bg-cover bg-center relative flex justify-end text-white">
@@ -27,8 +25,8 @@
 
   <div id="sidebar" class="w-[max(35%,350px)] h-full relative">
     <div class="frosted-glass-tint absolute w-full h-full"></div>
-
-    <div class="h-full flex flex-col gap-8 p-8 relative">
+    
+    <div class="h-full flex flex-col justify-between p-8 relative">
       <section id="location">
         <div class="search-group relative mb-6">
           <form action="">
@@ -50,7 +48,7 @@
           </div>
         </div>
 
-        <div id="address" class="flex flex-wrap">
+        <div id="address" class="flex">
           <div id="city" class="comma text-3xl"></div>
           <div id="state" class="comma text-3xl"></div>
           <div id="country" class="text-3xl"></div>
@@ -58,14 +56,14 @@
         <div id="date" class="text-2xl"></div>
       </section>
 
-      <section id="hourly" class="grow flex flex-col">
+      <section id="hourly" class="flex flex-col">
         <span class="text-6xl hideable">Today</span>
         <div class="weather flex items-center gap-2">
           <div class="condition"></div>
           <div class="high temp text-xl"></div>
           <div class="low temp text-xl"></div>
         </div>
-        <div id="temp-graph"></div>
+        <canvas id="chart"></canvas>
       </section>
 
       <section id="daily" class="flex justify-between">

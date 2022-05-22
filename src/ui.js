@@ -1,8 +1,32 @@
 /* 
   TODO
-    Update background image based on current weather condition */
+    Update background image based on current weather condition
+    Implement tree-shaking of Chart.js */
 
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip,
+} from 'chart.js';
 import conditions from './conditions';
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip
+);
+
+Chart.defaults.font.size = 16;
+Chart.defaults.font.family =
+  'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+Chart.defaults.color = 'white';
 
 export default class UI {
   #isCelsius = false;
@@ -10,6 +34,12 @@ export default class UI {
   #unit = 'f';
 
   #unitButtons;
+
+  #chart;
+
+  #chartElement;
+
+  #tooltipElement;
 
   #dayNameElements;
 
@@ -40,6 +70,7 @@ export default class UI {
     this.gatherDateElements();
     this.gatherTimeElement();
     this.gatherSearchElements();
+    this.gatherChartElement();
     this.setupUnitButtons();
     this.setupSearch();
   }
@@ -98,6 +129,10 @@ export default class UI {
         })
       ),
     };
+  }
+
+  gatherChartElement() {
+    this.#chartElement = document.querySelector('#chart');
   }
 
   gatherDayNameElements() {
@@ -181,6 +216,7 @@ export default class UI {
     this.#refreshDayNames();
     this.#refreshDates();
     this.#refreshTime();
+    this.#refreshChart();
   }
 
   #refreshTemps() {
@@ -272,6 +308,139 @@ export default class UI {
       'en-US',
       options
     ).format(this.#weatherData.current.date);
+  }
+
+  #refreshChart() {
+    if (!this.#chart) {
+      this.#chart = new Chart(this.#chartElement, {
+        type: 'line',
+        data: this.#buildChartData(),
+        options: this.#buildChartOptions(),
+      });
+    } else {
+      this.#chart.data.labels = this.#weatherToHourlyLabels();
+      this.#chart.data.datasets[0].data = this.#weatherToHourlyTemps();
+      this.#chart.update();
+    }
+  }
+
+  #weatherToHourlyLabels() {
+    return this.#getFilteredHours().map((hour) =>
+      new Intl.DateTimeFormat('en-US', { hour: 'numeric' }).format(hour.date)
+    );
+  }
+
+  #weatherToHourlyTemps() {
+    return this.#getFilteredHours().map((hour) => hour[this.#unit]);
+  }
+
+  #getFilteredHours() {
+    return (
+      this.#weatherData.hourly
+        // Return the next 24 hours, starting at the top of the next hour
+        .slice(1, 25)
+        // Filter out every other hour
+        .filter((e, i) => i % 2 === 0)
+    );
+  }
+
+  #buildChartData() {
+    return {
+      labels: this.#weatherToHourlyLabels(),
+      datasets: [
+        {
+          data: this.#weatherToHourlyTemps(),
+          borderColor: 'white',
+          borderCapStyle: 'round',
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 6,
+          hoverRadius: 8,
+          pointBorderWidth: 1,
+          pointHoverBackgroundColor: 'white',
+        },
+      ],
+    };
+  }
+
+  #buildChartOptions() {
+    return {
+      scales: {
+        yAxis: {
+          display: false,
+        },
+        xAxis: {
+          display: false,
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          enabled: false,
+          external: this.#tooltipHandler.bind(this),
+        },
+      },
+    };
+  }
+
+  #createTooltipElement() {
+    this.#tooltipElement = document.createElement('div');
+    this.#tooltipElement.id = 'tooltip';
+    this.#tooltipElement.classList = 'flex flex-col items-center';
+
+    const time = document.createElement('span');
+    time.classList = 'text-base';
+
+    const temp = document.createElement('span');
+    temp.classList = 'temp';
+
+    this.#tooltipElement.time = time;
+    this.#tooltipElement.temp = temp;
+
+    this.#tooltipElement.append(time);
+    this.#tooltipElement.append(temp);
+
+    document.body.appendChild(this.#tooltipElement);
+  }
+
+  #tooltipHandler(context) {
+    // Create element on first render
+    if (!this.#tooltipElement) {
+      this.#createTooltipElement();
+    }
+
+    // Hide if no tooltip
+    if (context.tooltip.opacity === 0) {
+      this.#tooltipElement.style.display = 'none';
+    } else {
+      this.#tooltipElement.style.display = null;
+    }
+
+    // Set text
+    const pointData = context.tooltip.dataPoints[0];
+    this.#tooltipElement.time.textContent = pointData.label;
+    this.#tooltipElement.temp.textContent = pointData.raw;
+
+    // Handle positioning
+    const position = context.chart.canvas.getBoundingClientRect();
+    const tooltipMargin = 15;
+
+    this.#tooltipElement.style.left = `${
+      position.left +
+      window.pageXOffset +
+      context.tooltip.caretX -
+      this.#tooltipElement.clientWidth / 2
+    }px`;
+
+    this.#tooltipElement.style.top = `${
+      position.top +
+      window.pageYOffset +
+      context.tooltip.caretY -
+      this.#tooltipElement.clientHeight -
+      tooltipMargin
+    }px`;
   }
 
   #toggleTempsUnit(clickedButton) {
