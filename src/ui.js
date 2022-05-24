@@ -458,6 +458,7 @@ export default class UI {
       }
 
       this.#refreshTemps();
+      this.#refreshChart();
     }
   }
 
