@@ -100,7 +100,8 @@ export default class UI {
 
   #createChoiceElement(choice) {
     const element = document.createElement('li');
-    element.classList = 'py-2';
+    element.classList =
+      'py-2 px-2 cursor-pointer hover:bg-[rgba(255,255,255,0.1)]';
     element.textContent = choice;
 
     element.addEventListener('click', () => {
