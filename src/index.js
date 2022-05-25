@@ -49,7 +49,7 @@ function kelvinToFahrenheit(kelvin) {
 async function getCities(query) {
   const geoURL = createGeoURL(query);
   const response = await fetch(geoURL);
-  cityCache = await response.json();
+  cityCache = await response.json().then(condenseCities);
   return cityCache;
 }
 
@@ -131,18 +131,23 @@ function processWeatherData(rawData, location) {
 }
 
 function condenseCities(cities) {
-  const { name, state, country } = cities[0];
+  const condensedCities = [];
 
-  const allSameCity = cities.every(
-    (city) =>
-      city.name === name && city.state === state && city.country === country
-  );
+  // Only add cities with unique names
+  cities.forEach((city) => {
+    if (
+      !condensedCities.find(
+        (otherCity) =>
+          city.name === otherCity.name &&
+          city.state === otherCity.state &&
+          city.country === otherCity.country
+      )
+    ) {
+      condensedCities.push(city);
+    }
+  });
 
-  if (allSameCity) {
-    return cities[0];
-  }
-
-  throw Error('More than one city returned!');
+  return condensedCities;
 }
 
 async function getWeather(city) {
@@ -166,7 +171,9 @@ ui.subscribeToSearchEvent(async (inputValue) => {
 });
 
 ui.subscribeToSearchChoice(async (cityString) => {
-  const cities = cityCache.filter((city) => cityToString(city) === cityString);
-  const city = condenseCities(cities);
-  ui.weatherData = await getWeather(city);
+  const chosenCity = cityCache.find(
+    (city) => cityToString(city) === cityString
+  );
+
+  ui.weatherData = await getWeather(chosenCity);
 });
