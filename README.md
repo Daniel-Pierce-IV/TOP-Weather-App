@@ -14,3 +14,5 @@
 - Implement animations, transitions, and loaders for page elements and network requests
 - Clear dropdown results when a new search is initiated
 - Auto-load weather data based on user location, if available
+- Change the full location information from individual flex items to a single string
+- Uppercase the state/country codes instead of capitalcase
