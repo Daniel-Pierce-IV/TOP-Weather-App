@@ -500,6 +500,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   right: 0px;
 }
 
+.z-10 {
+  z-index: 10;
+}
+
 .mb-6 {
   margin-bottom: 1.5rem;
 }
