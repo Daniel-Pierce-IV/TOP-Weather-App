@@ -162,7 +162,9 @@ function cityToString(city) {
 ui.subscribeToSearchEvent(async (inputValue) => {
   const cities = await searchForCities(inputValue);
 
-  if (cities.length === 1) {
+  if (cities.length === 0) {
+    ui.showError();
+  } else if (cities.length === 1) {
     ui.weatherData = await getWeather(cities[0]);
   } else {
     const cityStrings = cities.map((city) => cityToString(city));

@@ -86,7 +86,16 @@ export default class UI {
       this.#searchElements.list.append(this.#createChoiceElement(choice));
     });
 
+    this.#hideError();
     this.#searchElements.dropdown.classList.remove('hidden');
+  }
+
+  showError() {
+    this.#searchElements.error.classList.remove('hidden');
+  }
+
+  #hideError() {
+    this.#searchElements.error.classList.add('hidden');
   }
 
   #createChoiceElement(choice) {
@@ -174,6 +183,7 @@ export default class UI {
       form: document.querySelector('.search-group form'),
       dropdown: document.querySelector('.search-group .dropdown'),
       list: document.querySelector('#cities'),
+      error: document.querySelector('.search-group .error'),
     };
   }
 
@@ -210,6 +220,7 @@ export default class UI {
   }
 
   #refresh() {
+    this.#hideError();
     this.#refreshTemps();
     this.#refreshLocation();
     this.#refreshConditions();
