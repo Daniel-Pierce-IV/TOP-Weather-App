@@ -39,13 +39,15 @@
                     type="text"
                     name="search"
                     id="search"
-                    placeholder="Search 'City, State/Country'">
+                    placeholder="Search 'City, State, Country'">
             </label>
           </form>
 
           <div class="hidden dropdown frosted-glass top-full right-0 left-0 px-4 absolute">
             <ul id="cities" class="text-xl py-2"></ul>
           </div>
+
+          <span class="error hidden text-sm text-red-600 absolute right-0">No cities found. Example: city, state, country</span>
         </div>
 
         <div id="address" class="flex">
