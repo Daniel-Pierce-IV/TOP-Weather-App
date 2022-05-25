@@ -1,8 +1,3 @@
-/* 
-  TODO
-    Update background image based on current weather condition
-    Implement tree-shaking of Chart.js */
-
 import {
   Chart,
   CategoryScale,
