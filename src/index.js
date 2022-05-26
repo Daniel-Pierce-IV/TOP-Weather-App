@@ -5,7 +5,7 @@ const KELVIN_CONSTANT = 273.15;
 // I'm aware this is bad practice (this is a practice project)
 const apiKey = '295e9bb0e250da8fe8e1ac30858d5e24';
 const apiWeather = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,alerts&appid=${apiKey}`;
-const apiGeocoding = `http://api.openweathermap.org/geo/1.0/direct?q={query}&limit=5&appid=${apiKey}`;
+const apiGeocoding = `https://api.openweathermap.org/geo/1.0/direct?q={query}&limit=5&appid=${apiKey}`;
 // const apiReverseGeo = 'https://geocode.xyz/{lat},{lon}?json=1';
 
 const ui = new UI();
